@@ -46,13 +46,12 @@ class Trainer():
             pbar = tqdm(range(len(train_dataloader.dataset)), leave=True)
             train_total_loss = 0.0
             train_total_acc = 0.0
-            for (x, y1, y2) in train_dataloader:
+            for (x, y) in train_dataloader:
                 x = x.to(self.dev)
-                y1 = y1.to(self.dev)
-                y2 = y2.to(self.dev)
-                (y_pred_1, y_pred_2) = self.net(x)
-                loss = self.loss(y_pred_1, y_pred_2, y1, y2)
-                acc = compare_func(y_pred_1, y1)
+                y = y.to(self.dev)
+                y_pred = self.net(x)
+                loss = self.loss(y_pred, y)
+                acc = compare_func(y_pred, y)
                 loss.backward()
                 self.opt.step()
                 self.opt.zero_grad()
