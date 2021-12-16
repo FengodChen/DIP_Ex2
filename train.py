@@ -13,7 +13,7 @@ seed_everything(21120009)
 
 dev = torch.device("cuda")
 dataset_train = TrainDataset("datasets")
-dataloader_train = DataLoader(dataset_train, batch_size=10, shuffle=True)
+dataloader_train = DataLoader(dataset_train, batch_size=14, shuffle=True)
 
 net = Net().to(dev)
 logger = Logger("save/net", net, load_newest=True)
@@ -21,4 +21,4 @@ loss = DiceLoss()
 opt = torch.optim.Adam(net.parameters(), lr=3e-4)
 trainer = Trainer(net, loss, opt, dev, logger, 100)
 
-trainer.train(dataloader_train, dataloader_train, compare_func, 100, 10000)
+trainer.train(dataloader_train, dataloader_train, compare_func, 100, 1000)
