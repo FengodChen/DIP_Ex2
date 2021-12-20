@@ -22,9 +22,8 @@ class TrainDataset(Dataset):
         ])
 
         self.d = []
-        self.change_flag = 1000
+        self.change_flag = 0
         self.tmp = self.d
-        self.tmp2 = self.d
 
         for f_name in file_name:
             x = x_trans(Image.open(f"{data_path}/{f_name}"))
@@ -36,16 +35,15 @@ class TrainDataset(Dataset):
         return len(self.d)
     
     def __getitem__(self, index):
-        if self.change_flag < 0:
-            self.change_flag = 1000
+        if self.change_flag <= 0:
+            self.change_flag = 999
             tr = transforms.Compose([
                 transforms.RandomCrop((490, 490)), 
                 transforms.RandomRotation(180),
                 transforms.Resize((512, 512))
             ])
             for i, d in enumerate(self.d):
-                self.tmp2[i] = tr(d)
-            self.tmp = self.tmp2
+                self.tmp[i] = tr(d)
         self.change_flag -= 1
         return (self.tmp[index][:-1, ::], self.tmp[index][-1, ::])
 

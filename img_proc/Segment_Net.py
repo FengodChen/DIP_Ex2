@@ -169,5 +169,3 @@ class DiceLoss(nn.Module):
         dice = (2.*intersection + smooth)/(inputs.sum() + targets.sum() + smooth)  
         
         return abs(1 - dice)
-
-Net = Net_With_Select
