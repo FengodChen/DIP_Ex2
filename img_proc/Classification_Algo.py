@@ -49,10 +49,16 @@ def classification(bgr_img, seg_img):
         gaus_seg_img = cv.GaussianBlur(bgr_img[h1:h2, w1:w2, :], (3, 3), 0)
         gray_seg_img = cv.cvtColor(gaus_seg_img, cv.COLOR_BGR2GRAY)
         gray_seg_img = np.uint8(gray_seg_img * seg_img[h1:h2, w1:w2])
-        if hasCircle(gray_seg_img):
+        #gray_seg_img = np.uint8(seg_img[h1:h2, w1:w2] * 255)
+        canny_seg_img = cv.Canny(gray_seg_img, 50, 150)
+        if hasCircle(canny_seg_img):
             label_list.append(CIRCLE)
-        elif hasRectange(gray_seg_img):
+        elif hasRectange(canny_seg_img):
             label_list.append(RECTANGE)
         else:
             label_list.append(OTHER)
-    return (x1, x2, y1, y2, label_list)
+
+    gray_img = cv.cvtColor(bgr_img, cv.COLOR_BGR2GRAY)
+    gray_img = np.uint8(gray_img * seg_img)
+    canny_img = cv.Canny(gray_img, 50, 150)
+    return (x1, x2, y1, y2, label_list, gray_img, canny_img)

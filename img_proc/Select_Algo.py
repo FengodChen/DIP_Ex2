@@ -51,7 +51,7 @@ def segmentBackground(img):
 
     return i
 
-def selectSign(segment_img, threshold=0.02):
+def selectSign(segment_img, threshold=0.002):
     ''' Get connected components and select the component which size is larger than the threshold '''
     (H, W) = segment_img.shape
     S = H * W

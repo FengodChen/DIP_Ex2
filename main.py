@@ -34,7 +34,7 @@ def draw(dataloader, batch_size, save_path):
             cv_array_pre = pre_proc(cv_array)
             cv_seg = segmentBackground(cv_array_pre)
 
-            (x1, x2, y1, y2, label_list) = classification(orgin_img, cv_seg)
+            (x1, x2, y1, y2, label_list, orgin_seg, canny_img) = classification(orgin_img, cv_seg)
             for (x_start, x_end, y_start, y_end, label) in zip(x1, x2, y1, y2, label_list):
                 if (label == 1):
                     draw_img = cv.rectangle(draw_img, (x_start, y_start), (x_end, y_end), (255, 0, 0), 3)
@@ -48,17 +48,23 @@ def draw(dataloader, batch_size, save_path):
             
             plt.figure(figsize=(40, 10))
 
-            plt.subplot(141)
+            plt.subplot(161)
             plt.imshow(orgin_img)
 
-            plt.subplot(142)
-            plt.imshow(cv_array)
+            plt.subplot(162)
+            plt.imshow(cv_array, cmap='gray', vmin=0, vmax=255)
 
-            plt.subplot(143)
-            plt.imshow(cv_seg)
+            plt.subplot(163)
+            plt.imshow(cv_seg, cmap='gray', vmin=0, vmax=255)
 
-            plt.subplot(144)
-            plt.imshow(draw_img)
+            plt.subplot(164)
+            plt.imshow(orgin_seg, cmap='gray', vmin=0, vmax=255)
+
+            plt.subplot(165)
+            plt.imshow(canny_img, cmap='gray', vmin=0, vmax=255)
+
+            plt.subplot(166)
+            plt.imshow(draw_img, cmap='gray', vmin=0, vmax=255)
 
             plt.savefig(f"{save_path}/{k+1}.jpg")
         break
