@@ -10,11 +10,11 @@ def matrix_torch2opencv(torch_tensor):
     (H, W, _) = cv_array.shape
     return cv_array.reshape(H, W)
 
-def pre_proc(img):
-    #i = cv.GaussianBlur(img, (3, 3), 0)
+def pre_proc(img, th=10):
+    i = cv.GaussianBlur(img, (3, 3), 0)
     i = img
-    p1 = i >= 128
-    p2 = i < 128
+    p1 = i >= th
+    p2 = i < th
     i[p1] = 255
     i[p2] = 0
     i = cv.erode(i, (3, 3))
@@ -51,14 +51,18 @@ def segmentBackground(img):
 
     return i
 
-def select_sign(img):
+def selectSign(segment_img, threshold=0.02):
+    ''' Get connected components and select the component which size is larger than the threshold '''
+    (H, W) = segment_img.shape
+    S = H * W
+    (segment_num, segment_labels, stats, centroids) = cv.connectedComponentsWithStats(segment_img, connectivity=4)
+    (x, y, w, h) = (stats[:,0], stats[:,1], stats[:,2], stats[:,3]) 
+    select_ptr = (w*h) / S >= threshold
+    (x1, x2, y1, y2) = (x[select_ptr], x[select_ptr] + w[select_ptr], y[select_ptr], y[select_ptr] + h[select_ptr])
+    return (x1[1:], x2[1:], y1[1:], y2[1:]) # Select [1:] to ignore background
+
+def getCoordinate(img):
     i = pre_proc(img)
     i = segmentBackground(i)
-    return i
-
-def eval(n=1):
-    import matplotlib.pyplot as plt
-    i = cv.imread(f"datasets/train_label/{n}.bmp", cv.IMREAD_GRAYSCALE)
-    i = select_sign(i)
-    plt.imshow(i)
-    plt.show()
+    (x1, x2, y1, y2) = selectSign(i)
+    return (x1, x2, y1, y2)
