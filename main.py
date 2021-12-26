@@ -34,7 +34,7 @@ def draw(dataloader, batch_size, save_path):
             cv_array_pre = pre_proc(cv_array)
             cv_seg = segmentBackground(cv_array_pre)
 
-            (x1, x2, y1, y2, label_list, orgin_seg, canny_img) = classification(orgin_img, cv_seg)
+            (x1, x2, y1, y2, label_list, orgin_seg, canny_img) = classification(cv_seg)
             for (x_start, x_end, y_start, y_end, label) in zip(x1, x2, y1, y2, label_list):
                 if (label == 1):
                     draw_img = cv.rectangle(draw_img, (x_start, y_start), (x_end, y_end), (255, 0, 0), 3)
