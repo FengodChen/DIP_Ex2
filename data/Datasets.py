@@ -4,6 +4,7 @@ import torch
 from torch.utils.data import Dataset
 from torchvision import transforms
 from PIL import Image
+import torchvision
 
 class TrainDataset(Dataset):
     def __init__(self, path) -> None:
@@ -65,3 +66,12 @@ class TestDataset(Dataset):
     
     def __getitem__(self, index):
         return (self.x[index], self.y[index])
+
+def ShapeDataset(path):
+    x_trans = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Grayscale(),
+        transforms.Resize((64, 64))
+    ])
+    ds = torchvision.datasets.ImageFolder(path, transform=x_trans)
+    return ds

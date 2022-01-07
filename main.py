@@ -15,8 +15,11 @@ torch.backends.cudnn.benchmark = True
 
 gpu = torch.device("cuda")
 cpu = torch.device("cpu")
-net = Net_With_Select().to(gpu)
-logger = Logger("save/net_with_select", net, load_newest=True)
+
+seg_net = Net_With_Select().to(gpu)
+seg_logger = Logger("save/net_with_select", seg_net, load_newest=True)
+shape_net = ShapeNet(class_num=3).to(gpu)
+shape_logger = Logger("save/net_shape", shape_net, load_newest=True)
 
 def draw(dataloader, batch_size, save_path):
     for (x, y) in dataloader:
@@ -25,7 +28,7 @@ def draw(dataloader, batch_size, save_path):
             orgin_img = np.uint8(x[k].permute(1, 2, 0).detach().numpy() * 255)
             draw_img = orgin_img.copy()
 
-            net_seg = net(x.to(gpu))[k].to(cpu).permute(1, 2, 0).detach().numpy()
+            net_seg = seg_net(x.to(gpu))[k].to(cpu).permute(1, 2, 0).detach().numpy()
 
             cv_array = np.uint8(net_seg * 255)
             (H, W, _) = cv_array.shape
@@ -34,9 +37,9 @@ def draw(dataloader, batch_size, save_path):
             cv_array_pre = pre_proc(cv_array)
             cv_seg = segmentBackground(cv_array_pre)
 
-            (x1, x2, y1, y2, label_list, orgin_seg, canny_img) = classification(cv_seg)
+            (x1, x2, y1, y2, label_list, orgin_seg, canny_img) = classification(cv_seg, shape_net, gpu)
             for (x_start, x_end, y_start, y_end, label) in zip(x1, x2, y1, y2, label_list):
-                if (label == 1):
+                if (label == 0):
                     draw_img = cv.rectangle(draw_img, (x_start, y_start), (x_end, y_end), (255, 0, 0), 3)
                     draw_img = cv.putText(draw_img, "C", (x_end, y_end), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3, cv.LINE_AA)
                 elif (label == 2):
