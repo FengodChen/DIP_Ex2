@@ -37,20 +37,18 @@ class ShapeNet(nn.Module):
         super().__init__()
 
         self.conv_net = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=6, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(in_channels=16, out_channels=1, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(in_channels=6, out_channels=3, kernel_size=3, stride=1, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.AvgPool2d(kernel_size=4, stride=4),
         )
 
         self.class_net = nn.Sequential(
-            nn.Linear(3 * 16 * 16, 120),
+            nn.Linear(1 * 16 * 16, 120),
             nn.ReLU(),
             nn.Linear(120, 84),
             nn.ReLU(),
-            nn.Linear(84, 10),
+            nn.Linear(84, class_num),
             nn.Sigmoid()
         )
 

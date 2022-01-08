@@ -41,32 +41,33 @@ def draw(dataloader, batch_size, save_path):
             for (x_start, x_end, y_start, y_end, label) in zip(x1, x2, y1, y2, label_list):
                 if (label == 0):
                     draw_img = cv.rectangle(draw_img, (x_start, y_start), (x_end, y_end), (255, 0, 0), 3)
-                    draw_img = cv.putText(draw_img, "C", (x_end, y_end), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3, cv.LINE_AA)
+                    #draw_img = cv.putText(draw_img, "C", (x_end, y_end), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3, cv.LINE_AA)
                 elif (label == 2):
                     draw_img = cv.rectangle(draw_img, (x_start, y_start), (x_end, y_end), (255, 0, 0), 3)
-                    draw_img = cv.putText(draw_img, "R", (x_end, y_end), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3, cv.LINE_AA)
+                    #draw_img = cv.putText(draw_img, "R", (x_end, y_end), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3, cv.LINE_AA)
                 else:
-                    draw_img = cv.rectangle(draw_img, (x_start, y_start), (x_end, y_end), (255, 0, 0), 3)
-                    draw_img = cv.putText(draw_img, "N", (x_end, y_end), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3, cv.LINE_AA)
+                    pass
+                    #draw_img = cv.rectangle(draw_img, (x_start, y_start), (x_end, y_end), (255, 0, 0), 3)
+                    #draw_img = cv.putText(draw_img, "N", (x_end, y_end), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 3, cv.LINE_AA)
             
             plt.figure(figsize=(40, 10))
 
-            plt.subplot(161)
+            plt.subplot(141)
             plt.imshow(orgin_img)
 
-            plt.subplot(162)
+            plt.subplot(142)
             plt.imshow(cv_array, cmap='gray', vmin=0, vmax=255)
 
-            plt.subplot(163)
+            plt.subplot(143)
             plt.imshow(cv_seg, cmap='gray', vmin=0, vmax=255)
 
-            plt.subplot(164)
-            plt.imshow(orgin_seg, cmap='gray', vmin=0, vmax=255)
+            #plt.subplot(154)
+            #plt.imshow(orgin_seg, cmap='gray', vmin=0, vmax=255)
 
-            plt.subplot(165)
-            plt.imshow(canny_img, cmap='gray', vmin=0, vmax=255)
+            #plt.subplot(165)
+            #plt.imshow(canny_img, cmap='gray', vmin=0, vmax=255)
 
-            plt.subplot(166)
+            plt.subplot(144)
             plt.imshow(draw_img, cmap='gray', vmin=0, vmax=255)
 
             plt.savefig(f"{save_path}/{k+1}.jpg")
